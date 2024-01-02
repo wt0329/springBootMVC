@@ -1,0 +1,25 @@
+#local
+server:
+  port: 8080
+
+#pagehelper
+pagehelper:
+  helper-dialect: mariadb
+  reasonable: true
+
+#datasource
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver  
+    url: jdbc:mariadb://localhost:3306/mydb
+    username: myuser
+    password: myuser
+
+#mybatis
+mybatis:
+  mapper-locations: classpath:config/mybatis/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+upload:
+  dir: "G://upload"

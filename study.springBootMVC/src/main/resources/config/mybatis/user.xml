@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="kr.letech.study.springBoot.cmmn.security.dao.UserDao">
+<select id="getInfoId" parameterType="String" resultType="kr.letech.study.springBoot.cmmn.security.vo.UserVO">
+       SELECT  USER_ID
+        	 , USER_PW
+        	 , USER_NM
+       FROM TB_USER
+       WHERE USER_ID = #{userId} AND DEL_YN = 'N'
+</select>
+    
+<select id="getRole" parameterType="String" resultType="String">
+       SELECT AUTH_CD
+    	 FROM TB_USER_AUTH
+    	WHERE USER_ID = #{userId} AND DEL_YN = 'N'
+</select>
+    
+    <insert id="insertUser" parameterType="kr.letech.study.springBoot.cmmn.security.vo.UserVO">
+    	INSERT INTO TB_USER ( USER_ID
+    						, USER_PW
+				    		, USER_NM
+				    		, USER_TELNO
+				    		, USER_EMAIL
+				    		, USER_ADDR	
+				    		, RGST_DT
+						  , RGST_ID
+						  , UPDT_DT
+						  , UPDT_ID 
+						  , DEL_YN)	
+    	VALUES ( #{userId} 
+		    	, #{userPw}
+		        , #{userNm}
+		      	, #{userTelNo}
+		    	, #{userEmail}
+		    	, #{userAddr}
+			    , now()
+				, #{rgstId}
+				, now()
+				, #{updtId} 
+				, 'N' )
+    </insert>
+    
+    <insert id="insertRole" parameterType="kr.letech.study.springBoot.cmmn.security.vo.UserAuthVO">
+    	INSERT INTO TB_USER_AUTH( USER_ID
+								, AUTH_CD
+								, RGST_DT
+								, RGST_ID
+								, UPDT_DT
+								, UPDT_ID
+								, DEL_YN  )
+	 	VALUES (  #{userId}
+	 			, 'USER'
+	 			, now()
+	 			, #{rgstId}
+	 			, now()
+	 			, #{updtId}
+	 			, 'N' )
+    </insert>
+  
+
+</mapper>
