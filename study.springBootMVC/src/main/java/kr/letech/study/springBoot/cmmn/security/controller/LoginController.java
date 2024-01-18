@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.letech.study.springBoot.cmmn.security.service.UserLoginServiceImpl;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
@@ -30,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class LoginController {
 	
 	

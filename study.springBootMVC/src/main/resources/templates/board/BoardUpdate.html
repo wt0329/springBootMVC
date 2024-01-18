@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+      
+<template layout:fragment="vueTemplate" id="vueTemplate">
+	<section class="section">
+		<div class="row">
+			<div class="col">​
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">글 수정</h5>
+						<form @submit.prevent="submitForm">
+							<table class="table table-bordered">
+								<tbody>
+									<tr>
+										<th>구분</th>
+										<td>
+											<select v-model="board.boardCd" class="form-control">
+												<option value="자유">자유</option>
+												<option value="공지">공지</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>제목</th>
+										<td>
+										 <input type="text" v-model="board.boardTitle" placeholder="제목"/>
+										</td>
+									</tr>
+									<tr>
+										<th>내용</th>
+										<td>
+										 <input type="text" v-model="board.boardCnt" placeholder="내용"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<v-row> 
+							 <v-col cols="12" md="5">
+							  <button type="submit" value="저장">등록</button>
+							 </v-col> 
+							</v-row>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</template>
+
+<script type="text/javascript" layout:fragment="vueScript">
+	Vue.createApp({ 
+	    template: '#vueTemplate',
+	    data() { 
+	      return {
+	        boardId: '[[${boardId}]]',
+	        board:[],
+	        boards: []
+	      }
+	    },
+	    mounted() {
+            const vm = this;
+           
+          
+            $.ajax({
+                url: G_CONST.CPATH + '/api/v1/board/'+ this.boardId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    vm.board = response[0];
+                    vm.boards = response;
+                    console.log("lll",response);
+                },
+                error: function(error) {
+                    console.error('게시판 데이터를 불러오는 중 에러 발생:', error);
+                }
+            });
+        },
+       methods: {
+    	   fn_boardList() {
+    		   location.href = G_CONST.CPATH + "/front/board/list";
+    	   },
+    	   submitForm() {
+    		  var boardId = this.boardId;
+    		  
+    		  formData = new FormData();
+   		   
+	   		   formData.append('boardCd', this.board.boardCd);
+	   		   formData.append('boardTitle', this.board.boardTitle);
+	   		   formData.append('boardCnt', this.board.boardCnt);
+	   		   
+    		  $.ajax({
+    			  url : G_CONST.CPATH + '/api/v1/board/'+ this.boardId,
+    			  type: 'PUT',
+    			  data : formData,
+	   			  processData: false,
+	   		      contentType:false,
+    			  success:function(resp) {
+    				  alert("수정성공");
+    				  location.href = "/front/board/list";
+    			  },
+    			  error : function(xhr, status, error) {
+    				  console.log("오류"+error);
+    			  }
+    		  })
+    	   }
+       }
+    }).mount('#app');
+</script>

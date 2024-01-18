@@ -14,12 +14,29 @@ spring:
     url: jdbc:mariadb://localhost:3306/mydb
     username: myuser
     password: myuser
+#thymeleaf 설정
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    check-template-location: true
 
 #mybatis
 mybatis:
   mapper-locations: classpath:config/mybatis/*.xml
   configuration:
     map-underscore-to-camel-case: true
-
+    
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: trace
+        type:
+          descriptor:
+            sql: trace
+            
 upload:
   dir: "G://upload"
+  
+

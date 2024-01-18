@@ -59,7 +59,7 @@ public class UserLoginServiceImpl implements UserDetailsService{
         // 권한 정보 등록
         UserAuthVO userAuthInfo = new UserAuthVO();
         userAuthInfo.setUserId(user.getUserId());
-        userAuthInfo.setAuthCd("USER"); // 기본값 'USER'로 설정
+        userAuthInfo.setAuthCd("ROLE_USER"); // 기본값 'USER'로 설정
 
         userDAO.insertRole(userAuthInfo); // 해당 메서드는 UserMapper에 있어야 합니다.
 	}

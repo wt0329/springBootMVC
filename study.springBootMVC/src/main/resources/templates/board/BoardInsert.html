@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+      
+<template layout:fragment="vueTemplate" id="vueTemplate">
+	<section class="section">
+		<div class="row">
+			<div class="col">​
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">글 등록</h5>
+						<form @submit.prevent="submitForm">
+							<table class="table table-bordered">
+								<tbody>
+									<tr>
+										<th>구분</th>
+										<td>
+											<select v-model="board.boardCd" class="form-control">
+												<option value="자유">자유</option>
+												<option value="공지">공지</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>제목</th>
+										<td>
+										 <input type="text" v-model="board.boardTitle" placeholder="제목"/>
+										</td>
+									</tr>
+									<tr>
+										<th>내용</th>
+										<td>
+										 <input type="text" v-model="board.boardCnt" placeholder="내용"/>
+										</td>
+									</tr>
+									<tr>
+										<th>첨부파일</th>
+										<td>
+											<input @change="onFileChange($event)" type="file" multiple />
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<v-row> 
+							 <v-col cols="12" md="5">
+							  <button type="submit" value="저장">등록</button>
+							 </v-col> 
+							</v-row>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</template>
+
+<script type="text/javascript" layout:fragment="vueScript">
+	Vue.createApp({ 
+	    template: '#vueTemplate',
+	    data() { 
+	      return {
+	    	  board: {
+	                boardCd: "",
+	                boardTitle: "",
+	                boardCnt: "",
+	                multipartFiles:[]
+	            },
+	      }
+	    },
+	    mounted() {
+	    	
+        },
+       methods: {
+    	   fn_boardList() {
+    		   location.href = G_CONST.CPATH + "/front/board/list";
+    	   },
+    	   onFileChange(event) {
+    	        this.board.multipartFiles = event.target.files;
+    	    },
+    	   submitForm() {
+    		   formData = new FormData();
+    		   
+    		   formData.append('boardCd', this.board.boardCd);
+    		   formData.append('boardTitle', this.board.boardTitle);
+    		   formData.append('boardCnt', this.board.boardCnt);
+    		   
+    		   for (let i = 0; i < this.board.multipartFiles.length; i++) {
+    	            formData.append('files', this.board.multipartFiles[i]);
+    	        }
+    		   
+    		   $.ajax({
+    			   url : G_CONST.CPATH + '/api/v1/board/',
+    			   type : 'POST',
+    			   
+    			   data : formData,
+    			   processData: false,
+    		        contentType:false,
+    			   success: function(resp){
+    				   console.log("삽입 성공");
+    				   location.href = "/front/board/list";
+    			   },
+    			   error : function(xhr, status, error) {
+    				   console.log("오류");
+    			   }
+    		   })
+    	   }
+       }
+    }).mount('#app');
+</script>

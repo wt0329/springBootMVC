@@ -49,7 +49,7 @@ public class BoardController {
 	 * @return
 	 */
 	@GetMapping("/api/v1/board")
-	public ResponseEntity<List<BoardVO>> selectBoardList(@RequestParam(defaultValue = "1") int pageNum
+	public ResponseEntity<PageInfo<BoardVO>> selectBoardList(@RequestParam(defaultValue = "1") int pageNum
 			, @RequestParam(value = "boardCd", required = false) String boardCd
 			, @RequestParam(value = "keyword", required = false) String keyword) {
 		
@@ -61,7 +61,7 @@ public class BoardController {
 		        selectBoardList = boardService.selectBoardList();
 		    }
 		PageInfo<BoardVO> pageInfo = PageInfo.of(selectBoardList); 
-		return ResponseEntity.ok(pageInfo.getList());
+		return ResponseEntity.ok(pageInfo);
 	}
 	
 	/**
@@ -89,20 +89,6 @@ public class BoardController {
 	    String result = this.boardService.insertBoard(userId, board, multipartFiles);
 	    return ResponseEntity.ok(result);
 	}
-	
-	/**
-	 * 게시물 등록
-	 * @param board
-	 * @param principal
-	 * @return
-	 */
-//	@PostMapping("/api/v1/board")
-//	public ResponseEntity<String> insertBoard(BoardVO board, Principal principal
-//			) {
-//		String userId = principal.getName();
-//		String result = this.boardService.insertBoard(userId, board);
-//		return ResponseEntity.ok(result);
-//	}
 	
 	/**
 	 * 게시물 수정

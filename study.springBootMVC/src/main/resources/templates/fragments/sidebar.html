@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <aside th:fragment="sidebar" id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+
+      <li class="nav-heading">Pages</li>
+
+     <!--  <li class="nav-item">
+        <a class="nav-link collapsed" href="${CPATH}/cmmn/user/userList.do">
+          <i class="bi bi-person"></i>
+          <span>목록</span>
+        </a>
+      </li> --><!-- End Profile Page Nav -->
+
+      <!-- <li class="nav-item">
+        <a class="nav-link collapsed" href="${CPATH}/cmmn/user/insertUserFrm.do">
+          <i class="bi bi-question-circle"></i>
+          <span>사용자 등록</span>
+        </a>
+      </li> --><!-- End F.A.Q Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/user/login">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>로그인</span>
+        </a>
+      </li><!-- End Login Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/front/board/list">
+          <i class="bi bi-card-list"></i>
+          <span>게시판</span>
+        </a>
+        
+        
+      </li> <!-- End Register Page Nav -->
+      
+  <!--      <li class="nav-item">
+    <sec:authorize access="isAnonymous()">
+        <a class="nav-link" href="/user/login">
+            <i class="fas fa-fw fa-table"></i>
+            <span>로그인</span>
+        </a>
+    </sec:authorize>
+    <sec:authorize access="hasRole('ROLE_USER')">
+        <a class="nav-link" href="/user/logout">
+            <i class="fas fa-fw fa-table"></i>
+            <span>로그아웃</span>
+        </a>
+    </sec:authorize>
+    <sec:authorize access="hasRole('ROLE_USER')">
+        <a class="nav-link" href="/front/board/list">
+            <i class="fas fa-fw fa-table"></i>
+            <span>게시판</span>
+        </a>
+    </sec:authorize>
+</li> -->
+
+
+
+    </ul>
+
+  </aside><!-- End Sidebar-->
+</html>

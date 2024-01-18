@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+      
+<template layout:fragment="vueTemplate" id="vueTemplate">
+	<section class="section">
+		<div class="row">
+			<div class="col">​
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">상세보기</h5>
+						<table class="table table-bordered" v-if="board">
+						 <tbody>
+							<tr>
+								<td>ID</td>
+								<td colspan="3">{{board.boardId}}</td>
+							</tr>
+							<tr>
+								<td>구분</td>
+								<td colspan="3">{{board.boardCd}}</td>
+							</tr>
+							<tr>
+								<td>제목</td>
+								<td colspan="3">{{board.boardTitle}}</td>
+							</tr>
+							<tr> 
+                    			<th>내용</th>
+                    			<td colspan="3">{{board.boardCnt}}</td>
+                			</tr>
+                			<template v-if = "boards!=null && boards.length > 0 ">
+									<tr v-for="file in boards" :key="file.fileId">
+										<th>첨부파일</th>
+										<td colspan="12"><a :href="`/api/v1/board/${board.fileId}/download`" download>{{ file.fileOgnm }}</a></td>
+										
+									</tr>
+								</template>
+								<template v-else>
+									<tr>
+										<th>첨부파일</th>
+										<td colspan="3">등록된 첨부파일이 없습니다.</td>
+									</tr>
+								</template>
+							</tbody>
+						</table>
+						 <col cols="12" md="5">
+                			<button v-on:click="fn_boardUpdate" class="btn float-right btn-primary">수정</button>
+                			<button @click="deleteBoard" class="btn float-right btn-primary">삭제</button>
+                			<button v-on:click="fn_boardList" class="btn float-right btn-primary">목록</button>
+        				 </col>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</template>
+
+<script type="text/javascript" layout:fragment="vueScript">
+	Vue.createApp({ 
+	    template: '#vueTemplate',
+	    data() { 
+	      return {
+	        boardId: '[[${boardId}]]',
+	        board:[],
+	        boards: [],
+	        fileId: '[[${fileId}]]'
+	      }
+	    },
+	    mounted() {
+            const vm = this;
+
+            $.ajax({
+                url: G_CONST.CPATH + '/api/v1/board/'+ this.boardId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    vm.board = response[0];
+                    vm.boards = response;
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.error('게시판 데이터를 불러오는 중 에러 발생:', error);
+                }
+            });
+        },
+       methods: {
+    	   fn_boardList() {
+    		   location.href = G_CONST.CPATH + "/front/board/list";
+    	   },
+    	   fn_boardUpdate() {
+    		   location.href = G_CONST.CPATH + "/front/board/update/" + this.boardId;
+    	   },
+    	   deleteBoard() {
+    		   var boardId = this.boardId;
+    		  $.ajax({
+    			  url : G_CONST.CPATH + '/api/v1/board/'+ this.boardId,
+    			  type: 'DELETE',
+    			  success:function(resp) {
+    				  alert("삭제성공");
+    				  location.href = "/front/board/list";
+    			  },
+    			  error : function(xhr, status, error) {
+    				  console.log("오류");
+    			  }
+    		  })
+    	   }
+       }
+    }).mount('#app');
+</script>

@@ -1,0 +1,55 @@
+@charset "UTF-8";
+/* 레이아웃 - 댓글 */
+.comments {
+  border: 1px solid #dbdbdb;
+}
+.comments .comment {
+  border-bottom: 1px solid #dbdbdb;
+  padding: 20px;
+}
+.comments .comment:last-child {
+  border-bottom: none;
+}
+
+/* 상단 메뉴 */
+.top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.top .username {
+  font-weight: bold;
+}
+.top .utility {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+}
+
+/* 하단 메뉴 */
+.bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  font-weight: bold;
+  font-size: 14px;
+}
+.bottom .divider {
+  width: 1px;
+  height: 20px;
+  background-color: #dbdbdb;
+  margin: 0 20px;
+}
+.bottom .menu {
+  margin: 0;
+  padding: 0;
+  color: #bebebe;
+}
+.bottom .menu.show-reply {
+  color: #333;
+}

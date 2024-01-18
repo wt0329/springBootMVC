@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<template layout:fragment="vueTemplate" id="vueTemplate">
+	 <div class="pagetitle">
+      <h1>사용자관리</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="${CPATH}/front/index">Home</a></li>
+          <li class="breadcrumb-item active"><a href="${CPATH}/front/boards">게시판</a></li>
+        </ol>
+      </nav>
+ </div><!-- End Page Title -->
+​
+   <section class="section">
+    <div class="row">
+       <div class="col">
+		<div class="card">
+		 <div class="card-body">
+		 <h5 class="card-title">게시글 검색</h5>
+​
+		 	<div class="row">
+		 		<label for="boardCd" class="col-sm-4 col-md-2 col-form-label">구분</label>
+		 		<div class="col-sm-8 col-md-4">
+                <select name="boardCd" class="form-control form-control-sm mr-2" v-model.trim="searchVO.boardCd">
+					<option value="자유">자유</option>
+					<option value="공지">공지</option>
+				</select>
+				</div>
+                <label for="keyword" class="col-sm-4 col-md-2 col-form-label">키워드</label>
+                <div class="col-sm-8 col-md-4">
+                  <input type="text" name="keyword"  class="form-control" v-model.trim="searchVO.keyword">
+                </div>
+                </div>
+            <div class="row float-end">
+​
+            <button type="button" class="btn float-right btn-primary " @click="search"><i class="bi bi-search">검색</i></button>
+            </div>
+		 </div>
+		</div>
+​
+   	   </div>
+   </div>
+      <div class="row">
+        <div class="col">
+			 <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">글 목록</h5>
+              <!-- Table with hoverable rows -->
+              <button v-on:click="fn_insertFrm" class="btn float-right btn-primary">등록</button>
+              <table class="table table-bordered">
+              <caption class="d-none">게시글 목록 (번호, ID, 구분, 제목, 작성자)</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">구분</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                  </tr>
+                </thead>
+                <tbody v-if="pageInfo.list != null && pageInfo.list.length > 0">
+                  <tr v-for="(vo,idx) in pageInfo.list" :key="vo.boardId">
+					<td>{{ idx + 1}}</td>
+					<td><a >{{vo.boardId}}</a></td>
+					<td>{{vo.boardCd}} </td>
+					<td><a :href="getUrl(vo)">{{vo.boardTitle}}</a></td>
+					<td>{{vo.userNm}}</td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                  	<th scope="row" colspan="5">데이터가 없습니다.</th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+    <!-- 페이징 START -->
+    <div class="row">
+	    <div class="col-sm-12 col-md-7">
+	        <ul class="pagination">
+	            <li v-if="pageInfo.isFirstPage">
+	                <a href="#" @click="changePage(1)" class="page-link">처음</a>
+	            </li>
+	            <li v-if="pageInfo.hasPreviousPage">
+	                <a href="#" @click="changePage(pageInfo.pageNum - 1)" class="page-link">이전</a>
+	            </li>
+	            <li v-for="pageNumber in pageInfo.pages" :key="pageNumber" :class="{ 'active': pageNumber === pageInfo.pageNum }">
+	                <a href="#" @click="changePage(pageNumber)" class="page-link">{{ pageNumber }}</a>
+	            </li>
+	            <li v-if="pageInfo.hasNextPage">
+	                <a href="#" @click="changePage(pageInfo.pageNum + 1)" class="page-link">다음</a>
+	            </li>
+	            <li v-if="pageInfo.isLastPage">
+	                <a href="#" @click="changePage(pageInfo.pages)" class="page-link">마지막</a>
+	            </li>
+	        </ul>
+	    </div>
+		</div>
+    <!-- 페이징 END -->
+            
+          </div>
+        </div>
+      </div>
+   </section>
+</template>
+​
+<script type="text/javascript" layout:fragment="vueScript">
+	Vue.createApp({ 
+	    template: '#vueTemplate',
+	    data() { 
+	      return {
+	        searchVO:{
+	        	 userId: '[[${param.boardCd}]]'
+	        	,userNm: '[[${param.keyword}]]'
+	        	,pageNum: 1
+	        },
+	        
+	        pageInfo: {
+	        	list: [],
+	        	pageNum: 1,
+	        	pageSize: 5,
+	        	total: 0,
+	        	hasNextPage: true,
+	        	hasPreviousPage : false,
+	        	isFirstPage: true,
+	        	isLastPage : false
+	        }
+	      }
+	    },
+	    mounted(){
+	    	this.search();
+	    },
+	
+	    methods: {
+	        search() {
+	            var vm = this;
+	            
+	            $.ajax({
+	                url: G_CONST.CPATH + '/api/v1/board',
+	                type: 'get',
+	                data: vm.searchVO,
+	                dataType: 'json',
+	                success: function(data) {
+	                    vm.pageInfo = data;
+	                    console.log(data);
+	                },
+	                error: function() {
+	                    alert('오류가 발생했습니다. \n잠시 후 다시 검색해주세요');
+	                }
+	            });
+	        },
+	        getUrl(vo){
+	            return G_CONST.CPATH + "/front/board/details/" + vo.boardId;
+	        },
+	        fn_insertFrm() {
+	            location.href = G_CONST.CPATH + "/front/board/insert";
+	        },
+	        changePage(pageNumber) {
+                this.searchVO.pageNum = pageNumber;
+                this.search(); // 페이지 변경 시 검색 메서드 호출
+            }
+	    }
+	  }).mount('#app')
+</script>
+<!--  <style layout:fragment="vueStyle">
+​
+</style>  -->
